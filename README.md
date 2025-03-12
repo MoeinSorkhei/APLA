@@ -9,11 +9,8 @@ Despite its simplicity, APLA delivers exceptional performance with remarkable ef
 
 
 <div align="center" style="margin-bottom: 1px;">
-  <img src="figs/fig_1_mem.png" width="48%" style="margin-right: 0.2%;">
-  <img src="figs/fig_1_latency.png" width="48%">
-</div>
-<div align="center">
-  <img src="figs/ViT-components.png" width="97%">
+  <img src="figs/fig_1_mem.png" width="49.6%">
+  <img src="figs/fig_1_latency.png" width="49.6%">
 </div>
 
 
