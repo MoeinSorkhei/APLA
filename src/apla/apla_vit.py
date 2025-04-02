@@ -5,6 +5,7 @@ from utils.transformers.transformers_utils import download_weights
 import torch.nn.functional as F
 import warnings
 
+from utils import *
 from utils.colors import *
 from utils import helpfuns
 
@@ -21,12 +22,12 @@ class APLA_Attention(nn.Module):
 
         # if indices is provided, use them (using pre-defined inds)
         # otherwise sample indices ONCE at initialization
-        if indices:
+        if indices is not None:
             self.indices = indices
-            print(f'APLA_Attention init: Using provided indices')
+            print_ddp(f'APLA_Attention init: Using provided indices')
         else:
             self.indices = torch.randperm(self.dim)
-            print(f'APLA_Attention init: Sampled a set of random indices')
+            print_ddp(f'APLA_Attention init: Sampled a set of random indices')
         
         # register the indices as buffer
         self.register_buffer('inds', self.indices)
@@ -86,15 +87,16 @@ class APLA_Attention(nn.Module):
 
 
 def replace_attn_with_apla(model, config):
+    if hasattr(config, 'inds_path'):
+        print_ddp(cyan(f'Registering inds based on path: {config.inds_path}'))
+        
     for i, block in enumerate(model.blocks):
         # access the attention module of the block
         attn = block.attn
 
         # if pre-defined trainable indices exist, use them
         if hasattr(config, 'inds_path'):
-            inds_path = config.inds_path
-            print_cyan(f'--- registering inds based on path: {inds_path}')
-            inds_dict = helpfuns.load_json(inds_path)
+            inds_dict = helpfuns.load_json(config.inds_path)
             trainable_inds = inds_dict[f'block_{i}']  # contains trainable inds
             freezed_inds = [idx for idx in range(attn.dim) if idx not in trainable_inds]
             indices = torch.tensor(trainable_inds + freezed_inds)
@@ -133,16 +135,25 @@ def replace_attn_with_apla(model, config):
 
         # replace the original attention module with apla attention
         block.attn = apla_attn
-        print(f'replaced Attention in block {i} with APLA_Attention')
+        print_ddp(f'Replaced Attention in block {i} with APLA_Attention')
 
 
-def build_apla(config, backbone_type, pretrained, transformers_params):
-    model = vit.__dict__[backbone_type](**transformers_params)
-    if pretrained:
-        checkpoint = download_weights(backbone_type=backbone_type, 
-                                      patch_size=transformers_params.patch_size,
-                                      pretrained_type=transformers_params.pretrained_type)
-    model.load_state_dict(checkpoint, strict=True)
+def build_apla(config, backbone_type, transformers_params, pretrained, is_multi_gpu=False):
+    model = vit.__dict__[backbone_type](**transformers_params, pretrained=pretrained)
+    
+    if is_multi_gpu:
+        if config.partial_size == 'full':
+            for name, param in model.named_parameters():
+                if 'attn.proj' in name:
+                    param.requires_grad = True
+                    print_ddp(byello(f'Set true for: {name}'))
+                else:
+                    param.requires_grad = False
+                    print_ddp(gray(f'Set false for: {name}'))
+            print_ddp(cyan(f'Successfully built APLA-enabled model\n'))
+            return model
+        else:
+            assert 'inds_path' in config, '"inds_path" should be present with multi-gpu training with random sampling'
     
     # freezing all params
     for _, param in model.named_parameters():
@@ -150,13 +161,13 @@ def build_apla(config, backbone_type, pretrained, transformers_params):
     
     # replace attention with apla attention (contains trainable parameters)
     replace_attn_with_apla(model=model, config=config)
-    print(f'Replaced Attention modules with Attention_APLA')
+    print_ddp(f'Replaced Attention modules with Attention_APLA')
     
     for name, param in model.named_parameters():
         if param.requires_grad:
-            print_byello(f'{name} requires_grad: {param.requires_grad}')
+            print_ddp(byello(f'{name} requires_grad: {param.requires_grad}'))
         else:
-            print_gray(f'{name} requires_grad: {param.requires_grad}')
+            print_ddp(gray(f'{name} requires_grad: {param.requires_grad}'))
         
-    print_cyan(f'Successfully built APLA-enabled model')
+    print_ddp(cyan(f'Successfully built APLA-enabled model\n'))
     return model

@@ -2,7 +2,6 @@ model_params:
     adaptation:
         mode: "apla"
         params:
-            mode: "attn_proj"
             partial_size: 16
 
 optimization_params:

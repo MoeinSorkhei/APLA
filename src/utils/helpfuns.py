@@ -120,14 +120,14 @@ def update_nested_values(_dict, _target, pname=[]):
             # recurse until the value is not a dict itself
             if key not in _dict:
                 _dict[key] = _target[key]
-                print(f"Nested values: {blue('ADDED')} new key to _dict: key: '{key}' \nhierarchy: \"{'.'.join(pname_copy)}\" with value: {pformat(_dict[key], sort_dicts=False)}")
+                print(f"Nested values: {blue('ADDED')} new key to _dict: key: '{key}' -- hierarchy: \"{'.'.join(pname_copy)}\" with value: {_dict[key]}")
                 continue  # skip traversing this newly added sub-dict
                 # return  # this kills the siblings in the same recursion level!!!
             update_nested_values(_dict[key], _target[key], pname_copy)
         else:
             if key not in _dict:
                 _dict[key] = _target[key]
-                print(f"Nested values: {blue('ADDED')} new key to _dict: key: '{key}' \nhierarchy: \"{'.'.join(pname_copy)}\" with value: {_dict[key]}")
+                print(f"Nested values: {blue('ADDED')} new key to _dict: key: '{key}' -- hierarchy: \"{'.'.join(pname_copy)}\" with value: {_dict[key]}")
             else:
                 _prevval = _dict[key]
                 _dict[key] = _target[key]

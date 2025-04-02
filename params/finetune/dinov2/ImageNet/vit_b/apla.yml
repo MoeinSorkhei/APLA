@@ -1,0 +1,88 @@
+dataset_params:
+    train_transforms:
+        # -- geometric/spatial augs --
+        Resize:
+            apply: true
+            height: 256
+            width: 256
+        CenterCrop: 
+            apply: false
+        Normalize: true
+        HorizontalFlip:
+            apply: true   # not included in augmix
+            p: 0.5
+        VerticalFlip: 
+            apply: false
+        RandomResizedCrop:
+            apply: true
+            size: 224
+            scale: [0.8, 1.2]
+        SimpleMultiCrop:
+            apply: false
+        
+        # -- pixel/color augs --
+        RandomRotation: {apply: false}
+        RandomGrayscale: {apply: false}
+        RandomCrop: {apply: false}
+        ColorJitter: {apply: false}
+        RandomPerspective:  {apply: false}
+        RandomAffine: {apply: false}
+        RandomGaussianBlur:  {apply: false}
+        RandomSolarize:  {apply: false}
+
+        # -- complimentory aug --
+        TrivialAugment:
+            apply: true
+            num_magnitude_bins: 31
+
+        RandomErasing:
+            apply: true
+            scale: [0.02, 0.33]
+            ratio: [0.3, 3.3]
+            value: "random"  # from MAE
+            p: 0.25  # from MAE
+
+        # -- batch-level augs --
+        advanced_aug: true
+        advanced_aug_params:
+            mixup_alpha: 0.8  # from MAE paper
+            cutmix_alpha: 1  # from MAE paper
+            prob: 0.4  # prob of applying mixup/cutmix
+            label_smoothing: 0.1  # from MAE paper
+    
+    val_transforms:
+        Resize:
+            apply: true
+            height: 256
+            width: 256
+        CenterCrop:
+            apply: true
+            height: 224
+            width: 224
+        Normalize: true
+    
+    test_transforms:
+        Resize:
+            apply: true
+            height: 256
+            width: 256
+        CenterCrop:
+            apply: true
+            height: 224
+            width: 224
+        Normalize: true
+
+model_params:
+    adaptation:
+        mode: "apla"
+        params:
+            partial_size: 128
+            inds_path: ../params/finetune/dinov2/ImageNet/vit_b/ImageNet-vit_b-rand_128.json
+
+optimization_params:
+    default:
+        optimizer:
+            params:
+                lr: 0.0005
+        scheduler:
+            type: ["LinearWarmup", "CosineAnnealingLR"]

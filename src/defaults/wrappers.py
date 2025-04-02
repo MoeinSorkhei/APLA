@@ -48,7 +48,7 @@ class DefaultWrapper:
         n_classes = self.dataloaders.trainloader.dataset.n_classes
         knn_nhood = self.dataloaders.trainloader.dataset.knn_nhood
         target_metric = self.dataloaders.trainloader.dataset.target_metric
-        print_ddp(f"The default metric has been set to : \033[94m{target_metric}\033[0m")
+        print_ddp(f"The default metric has been set to : {target_metric}")
         
         self.model_params.img_channels = img_channels
         self.model_params.knn_nhood = knn_nhood

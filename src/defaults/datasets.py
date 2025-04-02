@@ -782,7 +782,7 @@ class NABirds(BaseSet):
                     with open(os.path.join(self.root_dir, file), 'r') as f:
                         selected_image_ids = f.read().split('\n')[:-1]  # last line empty  
             else:
-                print(f'LOADING REGULARLY with mode: {self.mode}')
+                print_ddp(f'LOADING REGULARLY with mode: {self.mode}')
                 file = 'train_image_ids.txt' if self.mode == 'train' else 'val_image_ids.txt' if self.mode == 'val' else 'test_image_ids.txt'
                 with open(os.path.join(self.root_dir, file), 'r') as f:
                     selected_image_ids = f.read().split('\n')[:-1]  # last line empty    
@@ -2146,5 +2146,5 @@ class ImageNet(BaseSet):
             'img_path': s[0],
             'label': s[1]
         } for s in samples]
-        print_ddp(f'\nNumber of {self.mode} image: {len(data_list):,}\n')
+        print_ddp(f'\nNumber of {self.mode} image: {len(data_list):,}')
         return data_list

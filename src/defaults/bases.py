@@ -170,7 +170,7 @@ class BaseSet(Dataset):
                         interpolation=InterpolationMode.BILINEAR
                     )
                 )
-                print_ddp(blue('Added AugMix to transforms_list'))
+                print_ddp(blue(f'Added AugMix to transforms_list {self.mode}'))
                 
         if 'RandAugment' in transform_dict:
             if transform_dict['RandAugment']['apply']:
@@ -182,7 +182,7 @@ class BaseSet(Dataset):
                         interpolation=DEFAULT_INTERPOLATION_MODE
                     )
                 )
-                print_ddp(blue('Added RandAugment to transforms_list'))
+                print_ddp(blue(f'Added RandAugment to transforms_list {self.mode}'))
         
         if 'AutoAugment' in transform_dict:
             if transform_dict['AutoAugment']['apply']:
@@ -192,7 +192,7 @@ class BaseSet(Dataset):
                         interpolation=DEFAULT_INTERPOLATION_MODE,
                     )
                 )
-                print_ddp(blue('Added AutoAugment to transforms_list'))
+                print_ddp(blue(f'Added AutoAugment to transforms_list {self.mode}'))
         
         if 'TrivialAugment' in transform_dict:
             if transform_dict['TrivialAugment']['apply']:
@@ -202,7 +202,7 @@ class BaseSet(Dataset):
                         interpolation=DEFAULT_INTERPOLATION_MODE
                     )
                 )
-                print_ddp(blue('Added TrivialAugment to transforms_list'))
+                print_ddp(blue(f'Added TrivialAugment to transforms_list {self.mode}'))
                 
         
         # ----------------------------------------
@@ -223,7 +223,7 @@ class BaseSet(Dataset):
                                                   ratio=temp_d['ratio'], 
                                                   value=temp_d['value'],
                                                   p=temp_d['p']))
-                print_blue('Added RandomErasing to transforms_list')
+                print_ddp(blue(f'Added RandomErasing to transforms_list {self.mode}'))
         
         print_ddp(gray(f'{self.mode} TRANSFORMS LIST:'))
         print_ddp(gray(the_pprint.pformat(transform_list, sort_dicts=False) + '\n'))
