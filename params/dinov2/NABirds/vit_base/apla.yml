@@ -1,0 +1,17 @@
+model_params:
+    adaptation:
+        mode: "apla"
+        params:
+            mode: "attn_proj"
+            partial_size: 16
+
+optimization_params:
+    default:
+        optimizer:
+            params:
+                lr: 0.0005
+        scheduler:
+            type: ["LinearWarmup", "CosineAnnealingLR"]
+            params:
+                LinearWarmup:
+                    warmup_iters: 500
