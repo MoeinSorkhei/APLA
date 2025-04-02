@@ -1,5 +1,9 @@
-from defaults.bases import *
 from torch.cuda.amp import autocast
+import torch.nn.functional as F
+
+from defaults.bases import *
+from utils.transformers.vit import trunc_normal_
+
 
 class DINOLoss(nn.Module):
     def __init__(self, out_dim, ncrops, warmup_teacher_temp, teacher_temp,

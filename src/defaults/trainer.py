@@ -44,7 +44,7 @@ class Trainer(BaseTrainer):
         print_ddp(f'Trainer -- Using advance_aug: {self.advanced_aug}')
         print_ddp(f'Trainer -- wrapper train_collate_fn: {self.wrapped_defs.train_collate_fn}')
         print_ddp(f'Full wrapper definition:')
-        print_ddp(gray(the_pprint.pformat(self.wrapped_defs.__dict__, sort_dicts=False)))
+        # print_ddp(gray(the_pprint.pformat(self.wrapped_defs.__dict__, sort_dicts=False)))
         print_ddp('\n\n')
         
         # model states etc

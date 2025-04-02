@@ -1,7 +1,7 @@
 dataset_params:
-    dataset: "ImageNet"
-    data_location: "/storage/sorkhei/transfer_learner/data"
-    
+    dataset: ISIC2019
+    data_location: /storage/sorkhei/transfer_learner/data
+
     train_transforms:
         Resize:
             apply: true
@@ -91,7 +91,6 @@ dataset_params:
             width: 224
         Normalize: true
 
-
 dataloader_params:
     trainloader:
         batch_size: 64
@@ -118,69 +117,101 @@ dataloader_params:
         drop_last: false
         persistent_workers: true
 
-
 model_params:
-    backbone_type: "vit_base"
-    pretrained: true
+    backbone_type: vit_base
     transformers_params:
-        img_size: [518]
-        patch_size: 14
-        pretrained_type: "dinov2"
-        is_memory_efficient: true
-        block_conf:
-            has_layerscale: true
-            layerscale_init_values: 1.
+        student:
+            pretrained_type: LVD142M-SSL
+            pre_img_size: 518
+            patch_size: 14
+            drop_path_rate: 0
+            drop_path_uniform: false
+            layerscale: 1.e-5
+            ffn_layer: mlp
+            block_chunks: 0
+            num_register_tokens: 0
+            interpolate_antialias: false
+            interpolate_offset: 0.1
+        teacher:
+            momentum_teacher: 0.994
+            final_momentum_teacher: 1
+            warmup_teacher_temp: 0.04
+            teacher_temp: 0.07
+            warmup_teacher_temp_epochs: 30
+    
+    pretrained: true
     freeze_backbone: false
-
+    dinov2:
+        dino:
+            loss_weight: 1.0
+            head_n_prototypes: 65536
+            head_bottleneck_dim: 256
+            head_nlayers: 3
+            head_hidden_dim: 2048
+            koleo_loss_weight: 0.1
+        ibot:
+            loss_weight: 1.0
+            mask_sample_probability: 0.5
+            mask_ratio_min_max: [0.1, 0.5]
+            separate_head: false
+            head_n_prototypes: 65536
+            head_bottleneck_dim: 256
+            head_nlayers: 3
+            head_hidden_dim: 2048
+        centering: centering
 
 optimization_params:
     default:
         optimizer:
-            type: "AdamW"
+            type: AdamW
+            autoscale_lr: false
             params:
-                lr: 0.0005
+                lr: 1.e-4
                 weight_decay: 1.e-5
         scheduler:
-            type: ["LinearWarmup"]
+            type: [LinearWarmup, CosineAnnealingLR]
             params:
                 ReduceLROnPlateau:
-                    mode: "max"
+                    mode: max
                     factor: 0.1
                     patience: 2
                     verbose: true
                 OneCycleLR:
-                    anneal_strategy: "linear"
+                    anneal_strategy: linear
                     final_div_factor: 1.e-4
                 MultiStepLR:
-                    milestones: []
+                    milestones: [7]
                     gamma: 0.1
                 CosineAnnealingLR:
                     eta_min: 1.e-6
                 LinearWarmup:
-                    warmup_epochs: 0
-                    warmup_iters: 500
+                    warmup_epochs: 10
+                    warmup_iters: 0
+                    eta_min: 1.e-8
 
 training_params:
-    model_name: "DEBUG"
-    epochs: 100
+    model_name: debug
+    epochs: 300
+    freeze_last_layer_epochs: 1
     val_every: 0.5
     log_every: 25
     save_best_model: true
-    knn_eval: false
+    knn_eval: true
     grad_clipping: 1.0
     restore_session: false
     restore_only_model: false
     use_mixed_precision: true
-    save_dir: "/storage/sorkhei/adapt/checkpoints"
+    save_dir: /storage/sorkhei/adapt/in_domain/checkpoints
 
 system_params:
     use_all_GPUs: false
-    which_GPUs: "0"
+    which_GPUs: "0,1,2,3"
     use_GPU: true
 
 log_params:
-    project_name: "Adapt"  # wandb project name
-    run_name: "DEFINED_BY_MODEL_NAME"
+    project_name: In-Domain
+    run_name: DEFINED_BY_MODEL_NAME
+
 
 transfer_learning_params:
     pretrained_path: ""

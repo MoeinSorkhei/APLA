@@ -77,7 +77,7 @@ model_params:
         mode: "apla"
         params:
             partial_size: 128
-            inds_path: ../params/finetune/dinov2/ImageNet/vit_b/ImageNet-vit_b-rand_128.json
+            inds_path: ../params/finetune/dinov2/ImageNet/vit_b/inds-vit_b-rand_128.json
 
 optimization_params:
     default:

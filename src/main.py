@@ -163,9 +163,12 @@ def main(parameters, args):
     use_momentum = True if args.byol else False 
     
     # instantiate wrapper with all its definitions   
-    if args.byol or args.simsiam or args.dino:
+    if args.byol or args.simsiam or args.dino or args.dinov2:
         if args.dino:
             wrapper = DINOWrapper(parameters)
+        elif args.dinov2:
+            from self_supervised.dinov2 import DINOv2Wrapper  # do not move it to the top of the file
+            wrapper = DINOv2Wrapper(parameters)
         else:
             wrapper = BYOLWrapper(parameters, use_momentum=use_momentum)
     else:
@@ -181,7 +184,7 @@ def main(parameters, args):
         if args.debug:
             os.environ['WANDB_MODE'] = 'dryrun'
         if not args.test:
-            wandb_dir = parameters.training_params.save_dir.replace('checkpoints', 'wandb')
+            wandb_dir = parameters.training_params.save_dir.split('checkpoints')[0]
             mode = "offline" if args.offline else "online"
             print(f'Using wandb dir: {wandb_dir} -- mode: {mode}')
             wandb_dict=edict(
@@ -199,6 +202,9 @@ def main(parameters, args):
     if args.byol or args.simsiam or args.dino or args.dinov2:
         if args.dino:
             trainer = DINOTrainer(wrapper)
+        elif args.dinov2:
+            from self_supervised.dinov2 import Dinov2Trainer  # do not move it to the top of the file
+            trainer = Dinov2Trainer(wrapper)
         else:
             trainer = BYOLTrainer(wrapper, use_momentum)
     else:

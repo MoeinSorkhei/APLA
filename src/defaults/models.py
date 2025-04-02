@@ -4,6 +4,7 @@ from .bases import *
 from utils.transformers import *
 from utils.colors import *
 from utils import *
+from utils.transformers import vit
 
 
 class Identity(nn.Module):
@@ -35,40 +36,33 @@ class Classifier(BaseModel):
             
             if 'vit' in self.backbone_type:
                 from apla import apla_vit as apla_model
+                model = vit.__dict__[self.backbone_type](**transformers_params, pretrained=model_params.pretrained)
+            
             elif 'swin' in self.backbone_type:
                 raise NotImplementedError
                 # from apla import apla_swin as apla_model
+            
             else:
                 raise ValueError
             
             # build apla
             self.backbone = apla_model.build_apla(
                 config=adaptation_params,
-                pretrained=model_params.pretrained,
-                backbone_type=self.backbone_type,
-                transformers_params=transformers_params,
+                model=model,
+                attn_class='apla_attn',
                 is_multi_gpu=len(system_params.which_GPUs.split(",")) > 1,
             )
-            
-            fc_in_channels = self.backbone.num_features
         
         # --- init transformers
         elif hasattr(transformers, self.backbone_type):
             print_byello(f'No Adaptation...')
             self.backbone = transformers.__dict__[self.backbone_type](**self.transformers_params, pretrained=self.pretrained)
-            fc_in_channels = self.backbone.num_features
         
         else:
             raise NotImplementedError                
         
         self.backbone.fc = Identity()  # removing the fc layer from the backbone (which is manually added below)
-        
-        # modify stem and last layer
-        if 'adaptation' in model_params and model_params.adaptation.mode == 'mlp':
-            pass  # FC already added before
-        else:
-            self.fc = nn.Linear(fc_in_channels, self.n_classes)
-        # self.modify_first_layer(self.img_channels, self.pretrained)            
+        self.fc = nn.Linear(self.backbone.num_features, self.n_classes)
         
         if self.freeze_backbone:
             self.freeze_submodel(self.backbone)
