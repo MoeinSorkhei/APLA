@@ -25,22 +25,26 @@ It does not intorduce any new parameters, and leverages the existing ViT archite
 APLA is versatile and can easily be used for classification, segmentation and detection tasks.
 Further, it can seamlessly be employed for both supervised and self-supervised learning.
 
-<br>
 
+---
 ### Simple implementation
 APLA can be easily implemented using the [APLA package](./src/apla/appla_attn.py), which provides the implementation of APLA and helper functions to directly replace ```Attention``` module with ```APLA_Attention```.
 
 
+---
 ### Installations
 Please refer to the [```Dockerfile```](./docker/Dockerfile) and use [```build_docker.sh```](./docker/build_docker.sh) to build the image. 
-To train dinov2, additional installations are required. You can find the necessary packages in [```conda-dinov2```](./docker/conda-dinov2.yaml). It is recommended to set up a separate conda environment for installing the dinov2 packages.
+For self-supervision with dinov2, additional installations are required. You can find the necessary packages in [```conda-dinov2```](./docker/conda-dinov2.yaml). It is recommended to set up a separate conda environment for installing the dinov2 packages.
 
 
+---
 ### Datasets
 This repository implements many datasets, please refer to 
 [```datasets.py```](./src/defaults/datasets.py) 
 for their implementation.
 
+
+---
 ### Usage
 This repository contains code for both supervised and self-supervised adaptation (with dinov2).
 #### Supervised adaptation
@@ -72,6 +76,7 @@ python main.py --dinov2 --params_path ../params/pretrain/dinov2/ISIC2019/vit_b/a
 Please refer to the corresponding [README](./src/segmentation_and_detection/REAMDE_SEG_DET.md).
 
 
+---
 ### Citation
 
 ```bibtex
@@ -91,6 +96,7 @@ Please refer to the corresponding [README](./src/segmentation_and_detection/REAM
 }
 ```
 
+---
 ### Acknowledgement
 This repo is built on 
 [medical_transformers](https://github.com/ChrisMats/medical_transformers), [Dinov2](https://github.com/facebookresearch/dinov2), 
