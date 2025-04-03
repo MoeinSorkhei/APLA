@@ -103,11 +103,6 @@ class VTAB_flowers(VTABDataset):
     # 800 / 200 / 6,149
 
 
-class _VTAB_flowers(VTABDataset):
-    n_classes = 102
-    # 800 / 200 / 6,149
-
-
 class VTAB_pets(VTABDataset):
     n_classes = 37
     # 800 / 200 / 3,669

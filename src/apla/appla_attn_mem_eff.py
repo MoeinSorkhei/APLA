@@ -20,6 +20,10 @@ except ImportError:
 
 
 class APLA_MemEffAttention(APLA_Attention):
+    """
+    This is very similar to APLA_Attention, except that is uses memory-efficient attetion
+    as done in Dinov2.
+    """
     def forward(self, x: Tensor, attn_bias=None) -> Tensor:
         # MemEff attention from dinov2
         # References:
@@ -38,7 +42,7 @@ class APLA_MemEffAttention(APLA_Attention):
         x = memory_efficient_attention(q, k, v, attn_bias=attn_bias)
         x = x.reshape([B, N, C])
 
-        # below is equavalent to regular apla
+        # APLA on output projection
         # output projection
         # forward passes with trainable and freezed params
         trainable_out = F.linear(x, self.proj_weight1, self.proj_bias1)

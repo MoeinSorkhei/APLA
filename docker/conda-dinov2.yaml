@@ -1,0 +1,32 @@
+name: dinov2
+channels:
+  - defaults
+  - pytorch
+  - xformers
+  - conda-forge
+  - nvidia/label/cuda-11.7.0
+dependencies:
+  - python=3.10
+  - pytorch::pytorch
+  - pytorch::pytorch-cuda=11.7.0
+  - pytorch::torchvision
+  - omegaconf
+  - torchmetrics
+  - fvcore
+  - iopath
+  - xformers::xformers=0.0.18
+  - pip
+  - pip:
+    - git+https://github.com/facebookincubator/submitit
+    - --extra-index-url https://pypi.nvidia.com
+    # - cuml-cu11
+
+# --- followed by:
+# conda install wandb --channel conda-forge --yes
+# conda install -c conda-forge umap-learn --yes
+# conda install scikit-learn matplotlib ipykernel  pandas umap-learn tabulate h5py tqdm  datashader bokeh holoviews scikit-image colorcet --yes
+# conda install conda-forge::easydict --yes
+# pip install --no-cache-dir jupyter jupyterlab termcolor tensorboard timm seaborn
+# pip install triton
+
+

@@ -1,8 +1,9 @@
+# the following attributes overrides/adds attributes to the __common__ config
 model_params:
     adaptation:
         mode: "apla"
         params:
-            partial_size: 8
+            partial_size: 8  # rank
 
 optimization_params:
     default:

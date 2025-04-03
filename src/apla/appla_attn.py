@@ -59,7 +59,7 @@ class APLA_Attention(nn.Module):
 
         x = (attn @ v).transpose(1, 2).reshape(B, N, C)
 
-        # output projection
+        # APLA on output projection
         # forward passes with trainable and freezed params
         trainable_out = F.linear(x, self.proj_weight1, self.proj_bias1)
         freezed_out = F.linear(x, self.proj_weight2, self.proj_bias2)
