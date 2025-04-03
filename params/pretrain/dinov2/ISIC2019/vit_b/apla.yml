@@ -2,5 +2,11 @@ model_params:
     adaptation:
         mode: "apla"
         params:
-            partial_size: 128
+            partial_size: full
             inds_path: ../params/pretrain/dinov2/ISIC2019/vit_b/inds-vit_b-rand_128.json
+
+optimization_params:
+    default:
+        optimizer:
+            params:
+                lr: 0.001

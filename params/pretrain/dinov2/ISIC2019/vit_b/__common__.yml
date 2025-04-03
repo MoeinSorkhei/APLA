@@ -201,7 +201,7 @@ training_params:
     restore_session: false
     restore_only_model: false
     use_mixed_precision: true
-    save_dir: /storage/sorkhei/adapt/in_domain/checkpoints
+    save_dir: /storage/sorkhei/adapt/apla/checkpoints
 
 system_params:
     use_all_GPUs: false
@@ -209,7 +209,7 @@ system_params:
     use_GPU: true
 
 log_params:
-    project_name: In-Domain
+    project_name: APLA
     run_name: DEFINED_BY_MODEL_NAME
 
 

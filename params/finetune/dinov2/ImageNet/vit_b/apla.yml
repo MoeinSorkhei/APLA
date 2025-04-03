@@ -83,6 +83,6 @@ optimization_params:
     default:
         optimizer:
             params:
-                lr: 0.0005
+                lr: 0.0001
         scheduler:
             type: ["LinearWarmup", "CosineAnnealingLR"]

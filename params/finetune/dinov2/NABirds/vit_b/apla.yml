@@ -2,13 +2,13 @@ model_params:
     adaptation:
         mode: "apla"
         params:
-            partial_size: 16
+            partial_size: 8
 
 optimization_params:
     default:
         optimizer:
             params:
-                lr: 0.0005
+                lr: 0.00003
         scheduler:
             type: ["LinearWarmup", "CosineAnnealingLR"]
             params:
