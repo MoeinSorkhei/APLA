@@ -1,10 +1,5 @@
 ## APLA: A Simple Adaptation Method for Vision Transformers
 
-This repo has implementation for the following papers:
-- [APLA: A Simple Adaptation Method for Vision Transformers](https://arxiv.org/abs/2503.11335) 
-- [Efficient Self-Supervised Adaptation for Medical Image Analysis](https://arxiv.org/abs/2503.18873)
-
-
 APLA (Attention Projection Layer Adaptation) is a lightweight yet effective method for adapting Vision Transformers (ViTs).
 We identify the projection layer immediately following the attention mechanism as critical for adaptation. 
 APLA tunes only this layer—or even a _random_ subset of its weights—without modifying the architecture or adding parameters.
@@ -60,41 +55,9 @@ cd src
 python main.py --params_path ../params/finetune/dinov2/NABirds/vit_b/apla.yml
 ```
 
-#### Self-supervised adaptation
-The structure follows a similar pattern as supervised adaptation.
-Each parameter file follows the hierarchy similar to ```params/pretrain/dinov2/ISIC2019/vit_b/apla.yml```
-which correponds to self-supervsied adaptaiton on the ```ISIC2019``` dataset using APLA, with ```dinov2``` initialization using the ```vit_b``` architecture.
-
-To do self-supervised adaptation with APLA using the dinov2 objective run:
-```
-# code needs to be run from src dir
-cd src
-python main.py --dinov2 --params_path ../params/pretrain/dinov2/ISIC2019/vit_b/apla.yml
-```
-
 #### Segmentation and Detection
 Please refer to the corresponding [README](./src/segmentation_and_detection/REAMDE_SEG_DET.md).
 
-
----
-### Citation
-
-```bibtex
-@article{sorkhei2025apla,
-  title={APLA: A Simple Adaptation Method for Vision Transformers},
-  author={Sorkhei, Moein and Konuk, Emir and Smith, Kevin and Matsoukas, Christos},
-  journal={arXiv preprint arXiv:2503.11335},
-  year={2025}
-}
-```
-```bibtex
-@article{sorkhei2025efficient,
-  title={Efficient Self-Supervised Adaptation for Medical Image Analysis},
-  author={Sorkhei, Moein and Konuk, Emir and Guo, Jingyu and Matsoukas, Christos and Smith, Kevin},
-  journal={arXiv preprint arXiv:2503.18873},
-  year={2025}
-}
-```
 
 ---
 ### Acknowledgement
