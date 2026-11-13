@@ -59,11 +59,3 @@ python main.py --params_path ../params/finetune/dinov2/NABirds/vit_b/apla.yml
 Please refer to the corresponding [README](./src/segmentation_and_detection/REAMDE_SEG_DET.md).
 
 
----
-### Acknowledgement
-This repo is built on 
-[medical_transformers](https://github.com/ChrisMats/medical_transformers), [Dinov2](https://github.com/facebookresearch/dinov2), 
-[Dino](https://github.com/facebookresearch/dino), 
-and 
-[timm](https://github.com/huggingface/pytorch-image-models) repositories.
-Thanks for their great work.
